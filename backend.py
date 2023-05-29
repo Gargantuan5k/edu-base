@@ -1,5 +1,5 @@
 import mysql.connector
-from main import tdy_date, markedAttendance, Name
+from main import *
 
 # Establish a connection to the MySQL database
 db = mysql.connector.connect(
