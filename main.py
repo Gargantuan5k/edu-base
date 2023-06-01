@@ -9,7 +9,7 @@ def init_db():
     user="root",
     password="root",
     database="edubase",
-    port=3307  # KEEP THIS COMMENTED unless reqd
+    # port=3307  # KEEP THIS COMMENTED unless reqd
     )
     cursor = db.cursor()
 
