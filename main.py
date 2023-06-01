@@ -1,24 +1,30 @@
 import mysql.connector
 import frontend
 
-# Adding date column to attendance
-def mysql_query_1():
+
+def init_db():
     # Establish a connection to the MySQL database
     db = mysql.connector.connect(
     host="localhost",
     user="root",
     password="root",
     database="edubase",
-    # port=3307  added this because I have multiple instances of mysql on my device, KEEP THIS COMMENTED - Sid
+    port=3307  # KEEP THIS COMMENTED unless reqd
     )
-
-    # Create a cursor object to execute SQL queries
     cursor = db.cursor()
+
+    return db, cursor
+
+# Adding date column to attendance
+def mysql_query_1():
+    # Initialise DB and create cursor
+    db, cursor = init_db()
 
     # Check if the date column already exists in the table
     check_query = f"SHOW COLUMNS FROM attendance LIKE '{frontend.tdy_date}'"
     cursor.execute(check_query)
     result = cursor.fetchone()
+
     # Add the date as column to the table if it doesn't already exist
     if result is None:
         alter_query = f"ALTER TABLE attendance ADD COLUMN `{frontend.tdy_date}` varchar(20)"
@@ -32,19 +38,10 @@ def mysql_query_1():
 
 # Getting name to add attendance of
 def mysql_query_2():
-    # Establish a connection to the MySQL database
-    db = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="root",
-    database="edubase",
-    # port=3307  added this because I have multiple instances of mysql on my device, KEEP THIS COMMENTED - Sid
-    )
+    # Initialise DB and create cursor
+    db, cursor = init_db()
 
-    # Create a cursor object to execute SQL queries
-    cursor = db.cursor()
-
-    getName_query = f"SELECT name FROM attendance WHERE id = {frontend.rNo}"
+    getName_query = f"SELECT name FROM attendance WHERE roll_no = {frontend.rNo}"
     cursor.execute(getName_query)
     getName = cursor.fetchone()
     print("Enter attendance for "+getName[0])
@@ -56,20 +53,11 @@ def mysql_query_2():
 
 # Adding student attendance
 def mysql_query_3():
-    # Establish a connection to the MySQL database
-    db = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="root",
-    database="edubase",
-    # port=3307  added this because I have multiple instances of mysql on my device, KEEP THIS COMMENTED - Sid
-    )
-
-    # Create a cursor object to execute SQL queries
-    cursor = db.cursor()
+    # Initialise DB and create cursor
+    db, cursor = init_db()
 
     # Adding attendance of student
-    attendance_query = f"UPDATE attendance SET `{frontend.tdy_date}` = '{frontend.markedAttendance}' WHERE id = {frontend.rNo}"
+    attendance_query = f"UPDATE attendance SET `{frontend.tdy_date}` = '{frontend.markedAttendance}' WHERE roll_no = {frontend.rNo}"
     cursor.execute(attendance_query)
 
     # Commit the changes to the database
@@ -81,20 +69,11 @@ def mysql_query_3():
 
 # Adding student to table
 def mysql_query_4():
-    # Establish a connection to the MySQL database
-    db = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="root",
-    database="edubase",
-    # port=3307  added this because I have multiple instances of mysql on my device, KEEP THIS COMMENTED - Sid
-    )
-
-    # Create a cursor object to execute SQL queries
-    cursor = db.cursor()
+    # Initialise DB and create cursor
+    db, cursor = init_db()
 
     # Adding data to table
-    addStudent_query = f"INSERT INTO `{frontend.table}`(id, name) values('{frontend.rNo}', '{frontend.Name}')"
+    addStudent_query = f"INSERT INTO `{frontend.table}`(roll_no, name) values('{frontend.rNo}', '{frontend.Name}')"
     cursor.execute(addStudent_query)
 
     print("New student added!")
@@ -106,19 +85,10 @@ def mysql_query_4():
 
 # Getting name to remove from table
 def mysql_query_5():
-    # Establish a connection to the MySQL database
-    db = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="root",
-    database="edubase",
-    # port=3307  added this because I have multiple instances of mysql on my device, KEEP THIS COMMENTED - Sid
-    )
+    # Initialise DB and create cursor
+    db, cursor = init_db()
 
-    # Create a cursor object to execute SQL queries
-    cursor = db.cursor()
-
-    getName_query = f"SELECT name FROM `{frontend.table}` WHERE id = '{frontend.rNo}'"
+    getName_query = f"SELECT name FROM `{frontend.table}` WHERE roll_no = '{frontend.rNo}'"
     cursor.execute(getName_query)
     getName = cursor.fetchone()
     print("Are you sure you want to remove "+getName[0])
@@ -131,20 +101,11 @@ def mysql_query_5():
 
 # Removing student from table
 def mysql_query_6():
-    # Establish a connection to the MySQL database
-    db = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="root",
-    database="edubase",
-    # port=3307  added this because I have multiple instances of mysql on my device, KEEP THIS COMMENTED - Sid
-    )
-
-    # Create a cursor object to execute SQL queries
-    cursor = db.cursor()
+    # Initialise DB and create cursor
+    db, cursor = init_db()
 
     # Removing student from table
-    removeStudent_query = f"DELETE FROM `{frontend.table}` WHERE id = '{frontend.rNo}'"
+    removeStudent_query = f"DELETE FROM `{frontend.table}` WHERE roll_no = '{frontend.rNo}'"
     cursor.execute(removeStudent_query)
     
     # Commit the changes to the database
