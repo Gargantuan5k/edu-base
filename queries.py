@@ -1,44 +1,44 @@
 import mysql.connector
 
 
-def init_db():
-    # Establish a connection to the MySQL database
-    db = mysql.connector.connect(
+db = mysql.connector.connect(
     host="localhost",
     user="root",
     password="root",
     database="edubase",
     port=3307  # TODO KEEP THIS COMMENTED unless reqd
     )
+
+def get_cursor():
+    # Establish a connection to the MySQL database
     cursor = db.cursor()
+    return cursor
 
-    return db, cursor
-
+def close_db():
+    db.close()
 
 def check_src_exists():
-    db, cursor = init_db()
+    cursor = get_cursor()
     query = f"select roll_no, name from students_src"
     cursor.execute(query)
     res = cursor.fetchall()
 
     cursor.close()
-    db.close()
     return res is not None
 
 
 def check_student_rec_exists(roll):
-    db, cursor = init_db()
+    cursor = get_cursor()
     query = f"select name from students_src where roll_no = '{roll}'"
     cursor.execute(query)
     res = cursor.fetchall()
 
     cursor.close()
-    db.close()
     return bool(res)
 
 
 def create_list(**kwargs):
-    db, cursor = init_db()
+    cursor = get_cursor()
     
     if check_src_exists():
         cursor.execute('delete from students_src')
@@ -51,11 +51,10 @@ def create_list(**kwargs):
     
     db.commit()
     cursor.close()
-    db.close()
 
 
 def add_student(roll_no, name, exists=False):
-    db, cursor = init_db()
+    cursor = get_cursor()
 
     if exists:
         cursor.execute(f"delete from students_src where roll_no = '{roll_no}'")
@@ -65,12 +64,11 @@ def add_student(roll_no, name, exists=False):
 
     db.commit()
     cursor.close()
-    db.close()
     return (roll_no, name)
 
 
 def delete_student(roll_no):
-    db, cursor = init_db()
+    cursor = get_cursor()
 
     exists_query = f"select * from students_src where roll_no = '{roll_no}'"
     cursor.execute(exists_query)
@@ -86,13 +84,11 @@ def delete_student(roll_no):
 
     db.commit()
     cursor.close()
-    db.close()
-
     return res
 
 
 def update_student(roll_no, new_name):
-    db, cursor = init_db()
+    cursor = get_cursor()
     res = {}
 
     get_orig_query = f"select * from students_src where roll_no = '{roll_no}'"
@@ -106,11 +102,10 @@ def update_student(roll_no, new_name):
 
     db.commit()
     cursor.close()
-    db.close()
     return res
 
 def add_date(tdy_date):
-    db, cursor = init_db()
+    cursor = get_cursor()
 
     # Check if the date column already exists in the table
     check_query = f"SHOW COLUMNS FROM attendance LIKE '{tdy_date}'"
@@ -124,11 +119,10 @@ def add_date(tdy_date):
 
     db.commit()
     cursor.close()
-    db.close()
 
 
 def get_name(r_no):
-    db, cursor = init_db()
+    cursor = get_cursor()
 
     # Get student name, give prompt for att
     getName_query = f"SELECT name FROM attendance WHERE roll_no = {r_no}"
@@ -138,11 +132,10 @@ def get_name(r_no):
 
     db.commit()
     cursor.close()
-    db.close()
 
 
 def mark_att(tdy_date, att, r_no):
-    db, cursor = init_db()
+    cursor = get_cursor()
 
     # Adding attendance of student
     attendance_query = f"UPDATE attendance SET `{tdy_date}` = '{att}' WHERE roll_no = {r_no}"
@@ -150,4 +143,3 @@ def mark_att(tdy_date, att, r_no):
 
     db.commit()
     cursor.close()
-    db.close()
