@@ -83,23 +83,9 @@ def run_menu():
             else:
                 print("Enter valid choice")
 
-        # elif ch1 == 2:
-        #     table = "attendance"
-        #     rNo = int(input("Enter new student's roll no.: "))
-        #     Name = input("Enter new student's name: ")
-        #     mysql_query_4()
-        # elif ch1 == 3:
-        #     table = "attendance"
-        #     rNo = int(input("Enter roll no. of student to remove: "))
-        #     mysql_query_5()
-        #     confirmation = input("y/n: ")
-        #     if confirmation.lower() == "y":
-        #         mysql_query_6()
-        #         print("Student removed!")
-        #     else:
-        #         pass
-        elif ch1 == 4:
-            print_menu()
+        elif ch1 == 2: # back
+            run_menu()
+
     elif ch == 3:
         print("Enter choice: ")
         print("1. Add marks")

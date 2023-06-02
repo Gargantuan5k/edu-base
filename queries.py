@@ -1,5 +1,4 @@
 import mysql.connector
-# import frontend TODO remove
 
 
 def init_db():
@@ -83,50 +82,3 @@ def mark_att(tdy_date, att, r_no):
     db.commit()
     cursor.close()
     db.close()
-
-# TODO remove lines 63-107
-# def mysql_query_4():
-#     # Initialise DB and create cursor
-#     db, cursor = init_db()
-
-#     # Adding data to table
-#     addStudent_query = f"INSERT INTO `{frontend.table}`(roll_no, name) values('{frontend.rNo}', '{frontend.Name}')"
-#     cursor.execute(addStudent_query)
-
-#     print("New student added!")
-#     # Commit the changes to the database
-#     db.commit()
-#     # Close the cursor and database connection
-#     cursor.close()
-#     db.close()
-
-
-# def mysql_query_5():
-#     # Initialise DB and create cursor
-#     db, cursor = init_db()
-
-#     getName_query = f"SELECT name FROM `{frontend.table}` WHERE roll_no = '{frontend.rNo}'"
-#     cursor.execute(getName_query)
-#     getName = cursor.fetchone()
-#     print("Are you sure you want to remove "+getName[0])
-
-#     # Commit the changes to the database
-#     db.commit()
-#     # Close the cursor and database connection
-#     cursor.close()
-#     db.close()
-
-
-# def mysql_query_6():
-#     # Initialise DB and create cursor
-#     db, cursor = init_db()
-
-#     # Removing student from table
-#     removeStudent_query = f"DELETE FROM `{frontend.table}` WHERE roll_no = '{frontend.rNo}'"
-#     cursor.execute(removeStudent_query)
-    
-#     # Commit the changes to the database
-#     db.commit()
-#     # Close the cursor and database connection
-#     cursor.close()
-#     db.close()
