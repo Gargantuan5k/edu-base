@@ -24,21 +24,17 @@ def check_students_exists():
     return res is not None
 
 
-def add_students(manual=True, **kwargs):
+def add_students(**kwargs):
     db, cursor = init_db()
     
     if check_students_exists():
         cursor.execute('delete from students_src')
 
-    if manual: # user has generated a dict of students as rno: name
-        students = kwargs['stu_dict']
+    students = kwargs['stu_dict']
 
-        for roll_no, name in students.items():
-            query = f"insert into students_src(roll_no, name) values('{roll_no}', '{name}')"
-            cursor.execute(query)
-
-    else:
-        file = kwargs['file']
+    for roll_no, name in students.items():
+        query = f"insert into students_src(roll_no, name) values('{roll_no}', '{name}')"
+        cursor.execute(query)
     
     db.commit()
     cursor.close()

@@ -16,37 +16,23 @@ def print_menu():
 
 
 def handle_students_list(action='create'):
+    students = {}
     while True:
         try:
-            print("Press 'm' if you would like to enter student names manually, or 'f' if you have a class list in .CSV format: ", end='')
-            ch1 = input().lower().strip()
+            num_stu = int(input("Enter the number of students in your classroom: "))
+
+            for i in range(num_stu):
+                students[i+1] = input(f"Enter NAME of student, ROLL NUMBER {i+1}: ")
+
+            add_students(stu_dict=students)
         except:
-            print("Invalid data entered! Try again.") 
+            print('Invalid data entered or DB Error! Try again.')
             continue
+        break
+
         
-
-        if ch1 == 'm':
-            students = {}
-            while True:
-                try:
-                    num_stu = int(input("Enter the number of students in your classroom: "))
-
-                    for i in range(num_stu):
-                        students[i+1] = input(f"Enter NAME of student, ROLL NUMBER {i+1}: ")
-
-                    add_students(stu_dict=students)
-                except:
-                    print('Invalid data entered or DB Error! Try again.')
-                    continue
-                break
-
-        elif ch1 == 'f':
-            pass
-        else:
-            continue
-        
-        print('Students Successfully Added! You can modify your class list at any time through the same menu.')
-        run_menu()
+    print('Students Successfully Added! You can modify your class list at any time through the same menu.')
+    run_menu()
 
 def run_menu():
     print_menu()
@@ -67,8 +53,8 @@ def run_menu():
                 ch2 = input('WARNING: Looks like a student list already exists! Creating/uploading a new list will overwrite the existing one. Proceed?(y/N): ').lower().strip()
                 if ch2 != 'y':
                     run_menu()
-        
             handle_students_list(action='create')
+
         elif ch1 == 2: # Modify an existing list TODO
             handle_students_list(action='modify')
         elif ch1 == 3: # Visualise the existing list TODO
