@@ -53,6 +53,13 @@ def create_list(**kwargs):
     cursor.close()
 
 
+def delete_list():
+    cursor = get_cursor()
+    cursor.execute("delete from students_src")
+    db.commit()
+    cursor.close()
+
+
 def add_student(roll_no, name, exists=False):
     cursor = get_cursor()
 

@@ -36,11 +36,6 @@ def handle_students_list(action='create'):
         run_menu()
 
     elif action == 'modify':
-        exists = check_src_exists()
-        if not exists:
-            print("No student list exists! Please create one to get started.")
-            run_menu()
-
         while True:
             ch = int(input('Press 1 to delete individual students, 2 to add individual students, 3 to change names, 4 to go back: '))
             if ch == 1: # delete stu
@@ -85,7 +80,11 @@ def handle_students_list(action='create'):
                     print(f"Changed student details: {res['original']} -> {res['new']}")
             else:
                 return
-
+    
+    elif action == 'delete':
+        delete_list()
+        print('Deleted!')
+        run_menu()
 
 def run_menu():
     print_menu()
@@ -96,8 +95,9 @@ def run_menu():
         print("-----------------")
         print("1. Create a new Students list")
         print("2. Update/modify my current Students List")
-        print("3. Generate/Visualise my Students List as a file")
-        print("4. Go Back")
+        print("3. View my Students List as text or a file")
+        print("4. Delete my Students List")
+        print("5. Go Back")
         ch1 = int(input("Choose an action: "))
 
         if ch1 == 1: # Create new list
@@ -108,12 +108,30 @@ def run_menu():
                     run_menu()
             handle_students_list(action='create')
 
-        elif ch1 == 2: # Modify an existing list TODO
-            handle_students_list(action='modify')
+        elif ch1 == 2: # modify existing list
+            exists = check_src_exists()
+            if not exists:
+                print("No student list exists! Please create one to get started.")
+                run_menu()
+            else:
+                handle_students_list(action='modify')
 
         elif ch1 == 3: # Visualise the existing list TODO
             handle_students_list(action='visualise')
-        elif ch1 == 4: # Back
+
+        elif ch1 == 4: # delete entire list
+            exists = check_src_exists()
+            if not exists:
+                print("No student list exists!")
+                run_menu()
+            else:
+                yn = input("WARNING: Delete the students list? This action cannot be undone. (y/N): ").lower().strip()
+                if yn == 'y':
+                    handle_students_list(action='delete')
+                else:
+                    run_menu()
+
+        elif ch1 == 5: # Back
             run_menu()
 
     if ch == 2:
