@@ -24,6 +24,19 @@ CREATE DATABASE edubase;
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `students_src`
+--
+
+DROP TABLE IF EXISTS `students_src`;
+CREATE TABLE IF NOT EXISTS `students_src`(
+  `roll_no` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(10) NOT NULL,
+  PRIMARY KEY(`roll_no`)
+);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `attendance`
 --
 
