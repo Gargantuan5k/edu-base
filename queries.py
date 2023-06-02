@@ -24,7 +24,7 @@ def check_src_exists():
     res = cursor.fetchall()
 
     cursor.close()
-    return res is not None
+    return bool(res)
 
 
 def check_student_rec_exists(roll):

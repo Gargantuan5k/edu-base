@@ -33,7 +33,7 @@ def handle_students_list(action='create'):
 
             
         print('List Successfully Created! You can modify your class list at any time through the same menu.')
-        run_menu()
+        return
 
     elif action == 'modify':
         while True:
@@ -78,108 +78,115 @@ def handle_students_list(action='create'):
                     
                     res = update_student(roll_no=roll, new_name=new_name)
                     print(f"Changed student details: {res['original']} -> {res['new']}")
+
             else:
                 return
+
+            return
     
     elif action == 'delete':
         delete_list()
         print('Deleted!')
-        run_menu()
+        return
 
 def run_menu():
-    print_menu()
-    ch = int(input("Enter choice: "))
+    while True:
+        print_menu()
+        ch = int(input("Enter choice: "))
 
-    # Program:
-    if ch == 1:
-        print("-----------------")
-        print("1. Create a new Students list")
-        print("2. Update/modify my current Students List")
-        print("3. View my Students List as text or a file")
-        print("4. Delete my Students List")
-        print("5. Go Back")
-        ch1 = int(input("Choose an action: "))
+        # Program:
+        if ch == 1:
+            print("-----------------")
+            print("1. Create a new Students list")
+            print("2. Update/modify my current Students List")
+            print("3. View my Students List as text or a file")
+            print("4. Delete my Students List")
+            print("5. Go Back")
+            ch1 = int(input("Choose an action: "))
 
-        if ch1 == 1: # Create new list
-            exists = check_src_exists()
-            if exists:
-                ch2 = input('WARNING: Looks like a student list already exists! Creating/uploading a new list will overwrite the existing one. Proceed?(y/N): ').lower().strip()
-                if ch2 != 'y':
-                    run_menu()
-            handle_students_list(action='create')
+            if ch1 == 1: # Create new list
+                exists = check_src_exists()
+                if exists:
+                    ch2 = input('WARNING: Looks like a student list already exists! Creating/uploading a new list will overwrite the existing one. Proceed?(y/N): ').lower().strip()
+                    if ch2 != 'y':
+                        continue
+                handle_students_list(action='create')
+                continue
 
-        elif ch1 == 2: # modify existing list
-            exists = check_src_exists()
-            if not exists:
-                print("No student list exists! Please create one to get started.")
-                run_menu()
-            else:
-                handle_students_list(action='modify')
-
-        elif ch1 == 3: # Visualise the existing list TODO
-            handle_students_list(action='visualise')
-
-        elif ch1 == 4: # delete entire list
-            exists = check_src_exists()
-            if not exists:
-                print("No student list exists!")
-                run_menu()
-            else:
-                yn = input("WARNING: Delete the students list? This action cannot be undone. (y/N): ").lower().strip()
-                if yn == 'y':
-                    handle_students_list(action='delete')
+            elif ch1 == 2: # modify existing list
+                exists = check_src_exists()
+                if not exists:
+                    print("No student list exists! Please create one to get started.")
+                    continue
                 else:
-                    run_menu()
+                    handle_students_list(action='modify')
+                    continue
 
-        elif ch1 == 5: # Back
-            run_menu()
+            elif ch1 == 3: # Visualise the existing list TODO
+                handle_students_list(action='visualise')
 
-    if ch == 2:
-        print("Enter choice: ")
-        print("1. Mark attendance")
-        print("2. Go back")
-        ch1 = int(input("Enter choice: "))
+            elif ch1 == 4: # delete entire list
+                exists = check_src_exists()
+                if not exists:
+                    print("No student list exists!")
+                    continue
+                else:
+                    yn = input("WARNING: Delete the students list? This action cannot be undone. (y/N): ").lower().strip()
+                    if yn == 'y':
+                        handle_students_list(action='delete')
+                        continue
+                    else:
+                        continue
 
-        if ch1 == 1:
-            add_date(tdy_date=tdy_date)
-            rNo = int(input("Enter roll no.: "))
-            get_name(rNo)
-            confirmation = input("y/n: ")
+            elif ch1 == 5: # Back
+                continue
 
-            if confirmation.lower() == "y":
-                markedAttendance = input("Enter attendance(p/a): ")
-                mark_att(tdy_date=tdy_date, att=markedAttendance, r_no=rNo)
-                print("Attendance Marked!")
-            elif confirmation.lower() == "n":
-                pass
-            else:
-                print("Enter valid choice")
+        if ch == 2:
+            print("Enter choice: ")
+            print("1. Mark attendance")
+            print("2. Go back")
+            ch1 = int(input("Enter choice: "))
 
-        elif ch1 == 2: # back
-            run_menu()
+            if ch1 == 1:
+                add_date(tdy_date=tdy_date)
+                rNo = int(input("Enter roll no.: "))
+                get_name(rNo)
+                confirmation = input("y/n: ")
 
-    elif ch == 3:
-        print("Enter choice: ")
-        print("1. Add marks")
-        print("2. Add student")
-        print("3. Remove student")
-        print("4. Go back")
+                if confirmation.lower() == "y":
+                    markedAttendance = input("Enter attendance(p/a): ")
+                    mark_att(tdy_date=tdy_date, att=markedAttendance, r_no=rNo)
+                    print("Attendance Marked!")
+                elif confirmation.lower() == "n":
+                    pass
+                else:
+                    print("Enter valid choice")
 
-    elif ch == 4:
-        print("Enter choice: ")
-        print("1. Add Submission")
-        print("2. Add student")
-        print("3. Remove student")
-        print("4. Go back")
+            elif ch1 == 2: # back
+                continue
 
-    elif ch == 5:
-        rNo = int(input("Show report card of which roll no.?: "))
+        elif ch == 3:
+            print("Enter choice: ")
+            print("1. Add marks")
+            print("2. Add student")
+            print("3. Remove student")
+            print("4. Go back")
 
-    elif ch == 6:
-        exit()
+        elif ch == 4:
+            print("Enter choice: ")
+            print("1. Add Submission")
+            print("2. Add student")
+            print("3. Remove student")
+            print("4. Go back")
 
-    else:
-        print("Please enter valid choice")
+        elif ch == 5:
+            rNo = int(input("Show report card of which roll no.?: "))
+
+        elif ch == 6:
+            break
+
+        else:
+            print("Please enter valid choice")
 
 if __name__ == '__main__':
     run_menu()
