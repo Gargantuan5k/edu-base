@@ -57,6 +57,12 @@ DROP TABLE IF EXISTS `marks`;
 CREATE TABLE IF NOT EXISTS `marks` (
   `roll_no` int NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
+  `UT-1` int NOT NULL,
+  `UT-2` int NOT NULL,
+  `Mid-Term` int NOT NULL,
+  `UT-3` int NOT NULL,
+  `UT-4` int NOT NULL,
+  `Annuals` int NOT NULL,
   PRIMARY KEY (`roll_no`)
 );
 
