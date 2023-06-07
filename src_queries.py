@@ -1,6 +1,5 @@
 import mysql.connector
 
-
 db = mysql.connector.connect(
     host="localhost",
     user="root",
@@ -9,13 +8,13 @@ db = mysql.connector.connect(
     port=3307  # TODO KEEP THIS COMMENTED unless reqd
     )
 
+def close_db():
+    db.close()
+
 def get_cursor():
     # Establish a connection to the MySQL database
     cursor = db.cursor()
     return cursor
-
-def close_db():
-    db.close()
 
 def check_src_exists():
     cursor = get_cursor()
@@ -110,43 +109,3 @@ def update_student(roll_no, new_name):
     db.commit()
     cursor.close()
     return res
-
-def add_date(tdy_date):
-    cursor = get_cursor()
-
-    # Check if the date column already exists in the table
-    check_query = f"SHOW COLUMNS FROM attendance LIKE '{tdy_date}'"
-    cursor.execute(check_query)
-    result = cursor.fetchall()
-
-    # Add the date as column to the table if it doesn't already exist
-    if result is None:
-        alter_query = f"ALTER TABLE attendance ADD COLUMN `{tdy_date}` varchar(20)"
-        cursor.execute(alter_query)
-
-    db.commit()
-    cursor.close()
-
-
-def get_name(r_no):
-    cursor = get_cursor()
-
-    # Get student name, give prompt for att
-    getName_query = f"SELECT name FROM attendance WHERE roll_no = {r_no}"
-    cursor.execute(getName_query)
-    getName = cursor.fetchall()
-    print("Enter attendance for " + getName[0])
-
-    db.commit()
-    cursor.close()
-
-
-def mark_att(tdy_date, att, r_no):
-    cursor = get_cursor()
-
-    # Adding attendance of student
-    attendance_query = f"UPDATE attendance SET `{tdy_date}` = '{att}' WHERE roll_no = {r_no}"
-    cursor.execute(attendance_query)
-
-    db.commit()
-    cursor.close()
