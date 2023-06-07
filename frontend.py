@@ -1,5 +1,7 @@
-from queries import *
-from datetime import date
+import src_queries
+import attendance_queries
+
+from datetime import date, datetime
 
 # Get today's date
 tdy_date = str(date.today())
@@ -25,7 +27,7 @@ def handle_students_list(action='create'):
                 for i in range(num_stu):
                     students[i+1] = input(f"Enter NAME of student, ROLL NUMBER {i+1}: ")
 
-                create_list(stu_dict=students)
+                src_queries.create_list(stu_dict=students)
             except:
                 print('Invalid data entered! Try again.')
                 continue
@@ -44,7 +46,7 @@ def handle_students_list(action='create'):
                     if roll == 0:
                         break
 
-                    res = delete_student(roll_no=roll)
+                    res = src_queries.delete_student(roll_no=roll)
                     if not res:
                         print(f"Roll number {roll} does not exist!")
                     else:
@@ -57,14 +59,14 @@ def handle_students_list(action='create'):
                         break
                     name = input("Enter new name: ")
                     
-                    if check_student_rec_exists(roll):
+                    if src_queries.check_student_rec_exists(roll):
                         yn = input("WARNING: A student with this roll number already exists. Overwrite? (y/N): ").lower().strip()
                         if yn != 'y':
                             continue
                         else:
-                            res = add_student(roll_no=roll, name=name, exists=True)
+                            res = src_queries.add_student(roll_no=roll, name=name, exists=True)
                     else:
-                        res = add_student(roll_no=roll, name=name)
+                        res = src_queries.add_student(roll_no=roll, name=name)
 
                     print(f"Added new student {res}")
 
@@ -76,7 +78,7 @@ def handle_students_list(action='create'):
                         break
                     new_name = input(f"Enter new name for roll no. {roll}: ")
                     
-                    res = update_student(roll_no=roll, new_name=new_name)
+                    res = src_queries.update_student(roll_no=roll, new_name=new_name)
                     print(f"Changed student details: {res['original']} -> {res['new']}")
 
             else:
@@ -85,9 +87,81 @@ def handle_students_list(action='create'):
             return
     
     elif action == 'delete':
-        delete_list()
+        src_queries.delete_list()
         print('Deleted!')
         return
+
+
+def handle_attendance(tdy_date=tdy_date, action='roll'):
+    res = attendance_queries.prepare_table(tdy_date)
+    if not res:
+        print('Error! You do not have a Students list yet, or your current students list has been mutilated. Please create a new students list to proceed!')
+        return
+    
+    if action == 'roll':
+        res = attendance_queries.check_unmarked(tdy_date)
+        present = []
+        absent = []
+
+        if res[0]:
+            if not res[1]:
+                overwrite_yn = input(f'Looks like some students\' attendances have not been marked for today ({tdy_date}). Would you like to mark these now (Y), or start over, marking all the attendances again (N)? ').lower().strip()
+            else:
+                overwrite_yn = 'y'
+            
+            if overwrite_yn == 'y':
+                for stu in res[2]:
+                    att = input(f'Attendance for Roll {stu[0]} {stu[1]} (p/a), q to quit: ').lower().strip()
+                    if att == 'p':
+                        present.append(stu[0])
+                    elif att == 'a':
+                        absent.append(stu[0])
+                    else:
+                        print('Aborting roll call! Your progress has been saved and you can continue marking attendance later.')
+                        break
+            else:
+                for stu in res[3]:
+                    att = input(f'Attendance for Roll {stu[0]} {stu[1]} (p/a): ').lower().strip()
+                    if att == 'p':
+                        present.append(stu[0])
+                    else:
+                        absent.append(stu[0])
+
+        else:
+            overwrite_yn = input(f'Attendance for {tdy_date} has already been recorded! Overwrite? (y/N) ')
+            if overwrite_yn == 'y':
+                attendance_queries.wipe_attendance(tdy_date)
+                handle_attendance()
+        
+        attendance_queries.mark_attendance(tdy_date=tdy_date, present=present, absent=absent)
+
+    elif action == 'individual':
+        present = []
+        absent = []
+
+        while True:
+            while True:
+                rno = int(input('Enter roll number (or 0 to quit): '))
+                if rno == 0:
+                    return
+                exists = src_queries.check_student_rec_exists(rno)
+                if exists:
+                    break
+                print(f"Student with roll number {rno} does not exist!")
+        
+            while True:
+                att = input(f"Enter attendance for Roll {rno} (p/a): ").lower().strip()
+                if att == 'p':
+                    present.append(rno)
+                elif att == 'a':
+                    absent.append(rno)
+                else:
+                    continue
+                break
+            
+            attendance_queries.mark_attendance(tdy_date=tdy_date, present=present, absent=absent)
+
+    elif action == 'visualise': pass # TODO
 
 def run_menu():
     while True:
@@ -105,7 +179,7 @@ def run_menu():
             ch1 = int(input("Choose an action: "))
 
             if ch1 == 1: # Create new list
-                exists = check_src_exists()
+                exists = src_queries.check_src_exists()
                 if exists:
                     ch2 = input('WARNING: Looks like a student list already exists! Creating/uploading a new list will overwrite the existing one. Proceed?(y/N): ').lower().strip()
                     if ch2 != 'y':
@@ -114,7 +188,7 @@ def run_menu():
                 continue
 
             elif ch1 == 2: # modify existing list
-                exists = check_src_exists()
+                exists = src_queries.check_src_exists()
                 if not exists:
                     print("No student list exists! Please create one to get started.")
                     continue
@@ -126,7 +200,7 @@ def run_menu():
                 handle_students_list(action='visualise')
 
             elif ch1 == 4: # delete entire list
-                exists = check_src_exists()
+                exists = src_queries.check_src_exists()
                 if not exists:
                     print("No student list exists!")
                     continue
@@ -142,27 +216,32 @@ def run_menu():
                 continue
 
         if ch == 2:
+            print(f'By default, this will edit the attendance for TODAY {str(date.today())}. If you would like to update attendance for another date, enter it below, or leave it blank to use the default.')
+            user_date = input('Enter Date (FORMAT: YYYY-MM-DD): ').strip()
+            ymd = user_date.split('-')
+            try:
+                ud = datetime(ymd[0], ymd[1], ymd[2])
+                tdy_date = ud
+            except:
+                tdy_date = str(date.today())
+
             print("Enter choice: ")
-            print("1. Mark attendance")
-            print("2. Go back")
+            print("1. Take Roll Call")
+            print("2. Mark attendance of specific student(s)")
+            print("3. Get attendance report")
+            print("4. Go back")
             ch1 = int(input("Enter choice: "))
 
             if ch1 == 1:
-                add_date(tdy_date=tdy_date)
-                rNo = int(input("Enter roll no.: "))
-                get_name(rNo)
-                confirmation = input("y/n: ")
+                handle_attendance(action='roll', tdy_date=tdy_date)
+            
+            elif ch1 == 2:
+                handle_attendance(action='individual', tdy_date=tdy_date)
+            
+            elif ch1 == 3:
+                handle_attendance(action='visualise', tdy_date=tdy_date) # TODO
 
-                if confirmation.lower() == "y":
-                    markedAttendance = input("Enter attendance(p/a): ")
-                    mark_att(tdy_date=tdy_date, att=markedAttendance, r_no=rNo)
-                    print("Attendance Marked!")
-                elif confirmation.lower() == "n":
-                    pass
-                else:
-                    print("Enter valid choice")
-
-            elif ch1 == 2: # back
+            elif ch1 == 4: # back
                 continue
 
         elif ch == 3:
@@ -190,4 +269,4 @@ def run_menu():
 
 if __name__ == '__main__':
     run_menu()
-    close_db()
+    src_queries.close_db()
