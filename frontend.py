@@ -111,7 +111,7 @@ def handle_attendance(tdy_date=tdy_date, action='roll'):
             
             if overwrite_yn == 'y':
                 for stu in res[2]:
-                    att = input(f'Attendance for Roll {stu[0]} {stu[1]} (p/a), q to quit: ').lower().strip()
+                    att = input(f'Attendance for Roll {stu[0]} {stu[1]} (p/a), any other key to quit: ').lower().strip()
                     if att == 'p':
                         present.append(stu[0])
                     elif att == 'a':
