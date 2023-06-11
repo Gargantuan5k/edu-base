@@ -59,9 +59,11 @@ CREATE TABLE IF NOT EXISTS `marks` (
   `name` varchar(100) NOT NULL,
   `UT-1` int NOT NULL,
   `UT-2` int NOT NULL,
+  `Internals-1` int NOT NULL,
   `Mid-Term` int NOT NULL,
   `UT-3` int NOT NULL,
   `UT-4` int NOT NULL,
+  `Internals-1` int NOT NULL,
   `Annuals` int NOT NULL,
   PRIMARY KEY (`roll_no`)
 );
@@ -73,11 +75,6 @@ CREATE TABLE IF NOT EXISTS `marks` (
 --
 
 DROP TABLE IF EXISTS `submission`;
-CREATE TABLE IF NOT EXISTS `submission` (
-  `roll_no` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) NOT NULL,
-  PRIMARY KEY (`roll_no`)
-);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
