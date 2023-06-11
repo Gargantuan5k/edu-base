@@ -1,10 +1,12 @@
 import src_queries
 import attendance_queries
-
+import marks_queries
 from datetime import date, datetime
 
 # Get today's date
 tdy_date = str(date.today())
+
+test = ""
 
 # Print menu function
 def print_menu():
@@ -12,9 +14,8 @@ def print_menu():
     print("1. Interact with my Students List")
     print("2. Update Today's Attendance")
     print("3. Update Marks")
-    print("4. Update Submissions")
-    print("5. Generate report cards")
-    print("6. Exit")
+    print("4. Generate report cards")
+    print("5. Exit")
 
 
 def handle_students_list(action='create'):
@@ -111,7 +112,7 @@ def handle_attendance(tdy_date=tdy_date, action='roll'):
             
             if overwrite_yn == 'y':
                 for stu in res[2]:
-                    att = input(f'Attendance for Roll {stu[0]} {stu[1]} (p/a), q to quit: ').lower().strip()
+                    att = input(f'Attendance for Roll {stu[0]} {stu[1]} (p/a), any other to quit: ').lower().strip()
                     if att == 'p':
                         present.append(stu[0])
                     elif att == 'a':
@@ -247,21 +248,14 @@ def run_menu():
         elif ch == 3:
             print("Enter choice: ")
             print("1. Add marks")
-            print("2. Add student")
-            print("3. Remove student")
             print("4. Go back")
+            ch1 = int(input("Enter choice: "))
+
 
         elif ch == 4:
-            print("Enter choice: ")
-            print("1. Add Submission")
-            print("2. Add student")
-            print("3. Remove student")
-            print("4. Go back")
-
-        elif ch == 5:
             rNo = int(input("Show report card of which roll no.?: "))
 
-        elif ch == 6:
+        elif ch == 5:
             break
 
         else:
