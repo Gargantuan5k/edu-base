@@ -283,17 +283,9 @@ def run_menu(print_options=True):
 
 
         elif ch == '4':
-            print("Enter choice: ")
-            print("1. Add Submission")
-            print("2. Add student")
-            print("3. Remove student")
-            print("4. Go back")
+            pass # TODO reportcards
 
         elif ch == '5':
-            # rNo = int(input("Show report card of which roll no.?: "))
-            pass
-
-        elif ch == '6':
             break
 
         else:
