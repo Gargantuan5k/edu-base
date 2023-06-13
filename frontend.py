@@ -7,7 +7,8 @@ from datetime import date, datetime
 tdy_date = str(date.today())
 
 test = ""
-
+st_mark = None
+rno = None
 # Print menu function
 def print_menu():
     print("What would you like to do today?")
@@ -106,6 +107,66 @@ def handle_students_list(action='create'):
         print('Deleted!')
         return
 
+def handle_marks(test = test, action = 'roll'):
+    res = marks_queries.prepare_table()
+    if not res:
+        print('Error! You do not have a Students list yet, or your current students list has been mutilated. Please create a new students list to proceed!')
+        return
+    
+    if action == 'roll':
+        res = marks_queries.check_unmarked(test)
+
+        if res[0]:
+            if not res[1]:
+                overwrite_yn = input(f'Looks like some students\' marks have not been marked for this test ({tdy_date}). Would you like to mark these now (Y), or start over, adding marks again (N)? ').lower().strip()
+            else:
+                overwrite_yn = 'y'
+            
+            if overwrite_yn == 'y':
+                for stu in res[2]:
+                    st_mark = int(input(f'Marks for Roll {stu[0]} {stu[1]}, any other key to quit: '))
+                    if st_mark is not None:
+                        marks_queries.addMarks(test)
+                    else:
+                        print('Aborting marking! Your progress has been saved and you can continue marking attendance later.')
+                        break
+            else:
+                for stu in res[3]:
+                    st_mark = input(f'Marks for Roll {stu[0]} {stu[1]}: ')
+                    if st_mark is True:
+                        marks_queries.addMarks(test)
+                    else:
+                        print("Enter valid marks")
+
+        else:
+            overwrite_yn = input(f'Marks for {test} has already been recorded! Overwrite? (y/N) ')
+            if overwrite_yn == 'y':
+                marks_queries.wipe_marks(test)
+                handle_marks()
+
+    elif action == 'individual':
+        while True:
+            while True:
+                try:
+                    rno = int(input('Enter roll number (or 0 to quit): '))
+                    if rno == 0:
+                        return
+                    exists = src_queries.check_student_rec_exists(rno)
+                    if exists:
+                        break
+                    print(f"Student with roll number {rno} does not exist!")
+                except (ValueError, TypeError):
+                    print('Invalid data entered!')
+                    continue
+        
+            while True:
+                st_mark = input(f"Enter marks for Roll {rno} (p/a): ").lower().strip()
+                if st_mark is True:
+                    marks_queries.addMarks()                    
+                else:
+                    print('Invalid data entered!')
+                    continue
+                break
 
 def handle_attendance(tdy_date=tdy_date, action='roll'):
     res = attendance_queries.prepare_table(tdy_date)
@@ -276,11 +337,44 @@ def run_menu(print_options=True):
                     continue
 
         elif ch == '3':
-            print("Enter choice: ")
             print("1. Add marks")
-            print("4. Go back")
-            ch1 = int(input("Enter choice: "))
-
+            print("2. Go back")
+            while True:
+                ch1 = input("Enter choice: ")             
+                if ch1 == '1':
+                    print("Enter exam:")
+                    print("1. UT-1")
+                    print("2. UT-2")
+                    print("3. Internals-1")
+                    print("4. Mid-term")
+                    print("5. UT-3")
+                    print("6. UT-4")
+                    print("7. Internals-2")
+                    print("8. Annuals")
+                    ch2 = input("Enter choice: ")
+                    if ch2 == '1':
+                        test = "UT-1"
+                    elif ch2 == '2':
+                        test = "UT-2"
+                    elif ch2 == '3':
+                        test = "Internals-1"
+                    elif ch2 == '4':
+                        test = "Mid-Term"
+                    elif ch2 == '5':
+                        test = "UT-3"
+                    elif ch2 == '6':
+                        test = "UT-4"
+                    elif ch2 == '7':
+                        test = "Internals-2"
+                    elif ch2 == '8':
+                        test = "Annuals"
+                    else:
+                        print("Enter valid choice")
+                    handle_marks(test, action='roll')
+                elif ch1 == '2':
+                    break
+                else:
+                    print("Invalid choice!")
 
         elif ch == '4':
             pass # TODO reportcards
