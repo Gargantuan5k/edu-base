@@ -1,7 +1,10 @@
 import src_queries
 import attendance_queries
 import marks_queries
+from tkinter import Tk
+from tkinter.filedialog import askdirectory as choose_folder
 from datetime import date, datetime
+from os import system
 
 # Get today's date
 tdy_date = str(date.today())
@@ -14,7 +17,7 @@ def print_menu():
     print("1. Interact with my Students List")
     print("2. Update Today's Attendance")
     print("3. Update Marks")
-    print("4. Generate report cards")
+    print("4. Clear the Screen")
     print("5. Exit")
 
 
@@ -105,6 +108,36 @@ def handle_students_list(action='create'):
         src_queries.delete_list()
         print('Deleted!')
         return
+    
+    
+    elif action == 'visualise': 
+        print("""View options for STUDENT LIST
+(1) View as Terminal output
+(2) Export list to CSV
+(3) Go Back""")
+        
+        while True:
+            ch_view = input('Enter option: ')
+            if ch_view == '1':
+                out = src_queries.view(mode='terminal')
+                print(out)
+            elif ch_view == '2':
+                print('Select Folder to store CSV file')
+                w = Tk()
+                w.withdraw()
+
+                p = choose_folder(title='Select Folder')
+                out = src_queries.view(mode='csv', path=p)
+
+                print(out)
+                continue
+            elif ch_view == '3':
+                break
+            elif ch_view not in '123':
+                print('Invalid option!')
+                continue
+        return
+
 
 
 def handle_attendance(tdy_date=tdy_date, action='roll'):
@@ -181,7 +214,33 @@ def handle_attendance(tdy_date=tdy_date, action='roll'):
             
             attendance_queries.mark_attendance(tdy_date=tdy_date, present=present, absent=absent)
 
-    elif action == 'visualise': pass # TODO
+    elif action == 'visualise': 
+        print("""View options for ATTENDANCE
+(1) View as Terminal output
+(2) Export attendance to CSV
+(3) Go Back""")
+        
+        while True:
+            ch_view = input('Enter option: ')
+            if ch_view == '1':
+                out = attendance_queries.view(mode='terminal')
+                print(out)
+            elif ch_view == '2':
+                print('Select Folder to store CSV file')
+                w = Tk()
+                w.withdraw()
+
+                p = choose_folder(title='Select Folder')
+                out = attendance_queries.view(mode='csv', path=p)
+
+                print(out)
+                continue
+            elif ch_view == '3':
+                break
+            elif ch_view not in '123':
+                print('Invalid option!')
+                continue
+        return
 
 def run_menu(print_options=True):
     while True:
@@ -190,6 +249,8 @@ def run_menu(print_options=True):
         else:
             print_options = True
         ch = input("Enter choice: ")
+        if ch not in '12345':
+            ch = 'err'
         # Program:
         if ch == '1':
             print("-----------------")
@@ -253,11 +314,13 @@ def run_menu(print_options=True):
                 tdy_date = str(date.today())
 
             print("Enter choice: ")
-            print("1. Take Roll Call")
-            print("2. Mark attendance of specific student(s)")
-            print("3. Get attendance report")
-            print("4. Go back")
+            
             while True:
+                print("1. Take Roll Call")
+                print("2. Mark attendance of specific student(s)")
+                print("3. Get attendance report")
+                print("4. Go back")
+
                 ch1 = input("Enter choice: ")
 
                 if ch1 == '1':
@@ -267,7 +330,7 @@ def run_menu(print_options=True):
                     handle_attendance(action='individual', tdy_date=tdy_date)
                 
                 elif ch1 == '3':
-                    handle_attendance(action='visualise', tdy_date=tdy_date) # TODO
+                    handle_attendance(action='visualise', tdy_date=tdy_date)
 
                 elif ch1 == '4': # back
                     break
@@ -283,12 +346,12 @@ def run_menu(print_options=True):
 
 
         elif ch == '4':
-            pass # TODO reportcards
+            system('cls')
 
         elif ch == '5':
             break
 
-        else:
+        elif ch == 'err':
             print("Invalid data entered!")
             print_options = False # do not reprint the menu; user has entered invalid data.
             continue

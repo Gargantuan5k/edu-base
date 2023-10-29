@@ -1,19 +1,21 @@
 import mysql.connector
+from os import getcwd, path as ospath
+import csv
 
 db = mysql.connector.connect(
     host="localhost",
     user="root",
     password="root",
     database="edubase",
-    # port=3307  # TODO KEEP THIS COMMENTED unless reqd
+    port=3307  # TODO KEEP THIS COMMENTED unless reqd
     )
 
 def close_db():
     db.close()
 
-def get_cursor():
+def get_cursor(dictionary=False):
     # Establish a connection to the MySQL database
-    cursor = db.cursor()
+    cursor = db.cursor(dictionary=dictionary)
     return cursor
 
 def check_src_exists():
@@ -109,3 +111,33 @@ def update_student(roll_no, new_name):
     db.commit()
     cursor.close()
     return res
+
+def view(mode, path=None):
+    dict_cursor = get_cursor(dictionary=True)
+    text_cursor = get_cursor()
+    q = 'select * from students_src'
+
+    if mode == 'terminal':
+        dict_cursor.execute(q)
+        out = dict_cursor.fetchall()
+        if not out:
+            return 'Empty set'
+        return out
+    
+    elif mode == 'csv':
+        if not path:
+            path = getcwd()
+
+        path_ = ospath.join(path, 'studentList_export.csv')
+        with open(path_, 'w') as outf:
+            text_cursor.execute('show columns from students_src')
+            header = [i[0] for i in text_cursor.fetchall()]
+            writer = csv.DictWriter(outf, fieldnames=header)
+
+            writer.writeheader()
+            dict_cursor.execute(q)
+            data = dict_cursor.fetchall()
+
+            writer.writerows(data)
+            
+        return path_
