@@ -242,6 +242,117 @@ def handle_attendance(tdy_date=tdy_date, action='roll'):
                 continue
         return
 
+
+def handle_marks(options):
+    res = marks_queries.prepare_table()
+    if not res:
+        print('Error! You do not have a Students list yet, or your current students list has been mutilated. Please create a new students list to proceed!')
+        return
+    
+    
+    if options[0] == 'add':
+        mark_l = []
+        headers = marks_queries.get_column_headers()
+        students = marks_queries.get_students()
+        exams = [i for i in headers if i not in ['roll_no', 'name']]
+
+        print('LIST OF EXAMS')
+        print('-------------')
+        for idx, e in enumerate(exams):
+            print(f"({idx+1}) {e}")
+
+        while True:
+            ch_exam = int(input('Choose exam: '))
+            if ch_exam not in range(1, len(exams) + 1):
+                print('Invalid option!')
+                continue
+            break
+
+        exam = exams[ch_exam-1]
+        print(f'Entering marks for Exam "{exam}"')
+
+
+        if options[1] == '1': # all students
+            for stu in students:
+                rno = stu.get('roll_no')
+                name = stu.get('name')
+
+                while True:
+                    mark = (input(f'Roll No. {rno} ({name}) [BLANK TO SKIP]: '))
+                    if mark:
+                        try:
+                            mark = int(mark)
+                            mark_l.append({'roll_no': rno, f'{exam}': mark})
+                            break
+                        except:
+                            print('Invalid datatype!')
+                            continue
+                    else:
+                        break
+
+            res = marks_queries.add_marks(exam=exam, mark_list=mark_l)
+            if not res: print('Error!')
+        
+        elif options[1] == '2':
+            while True:
+                try:
+                    rno = int(input('Enter roll number (or 0 to quit): '))
+                    if rno == 0:
+                        return
+                    exists = src_queries.check_student_rec_exists(rno)
+                    if exists:
+                        break
+                    print(f"Student with roll number {rno} does not exist!")
+                except (ValueError, TypeError):
+                    print('Invalid data entered!')
+                    continue
+        
+            while True:
+                mark = (input(f'Roll No. {rno}, Marks: '))
+                try:
+                    mark = int(mark)
+                    mark_l.append({'roll_no': rno, f'{exam}': mark})
+                    break
+                except:
+                    print('Invalid datatype!')
+                    continue
+                        
+            res = marks_queries.add_marks(exam=exam, mark_list=mark_l)
+            if not res: print('Error!')                
+
+    elif options[0] == 'delete':
+        marks_queries.wipe()
+        print('Deleted Successfully!')
+
+    elif options[0] == 'visualise':
+        print("""View options for MARKS
+(1) View as Terminal output
+(2) Export mark list to CSV
+(3) Go Back""")
+        
+        while True:
+            ch_view = input('Enter option: ')
+            if ch_view == '1':
+                out = marks_queries.view(mode='terminal')
+                print(out)
+            elif ch_view == '2':
+                print('Select Folder to store CSV file')
+                w = Tk()
+                w.withdraw()
+
+                p = choose_folder(title='Select Folder')
+                out = marks_queries.view(mode='csv', path=p)
+
+                print(out)
+                continue
+            elif ch_view == '3':
+                break
+            elif ch_view not in '123':
+                print('Invalid option!')
+                continue
+        return
+
+
 def run_menu(print_options=True):
     while True:
         if print_options: # so that entire menu does not get re-printed every tme user enters invalid input on the main page.
@@ -281,8 +392,9 @@ def run_menu(print_options=True):
                         handle_students_list(action='modify')
                         continue
 
-                elif ch1 == '3': # Visualise the existing list TODO
+                elif ch1 == '3': # Visualise the existing list
                     handle_students_list(action='visualise')
+                    continue
 
                 elif ch1 == '4': # delete entire list
                     exists = src_queries.check_src_exists()
@@ -325,12 +437,15 @@ def run_menu(print_options=True):
 
                 if ch1 == '1':
                     handle_attendance(action='roll', tdy_date=tdy_date)
+                    continue
                 
                 elif ch1 == '2':
                     handle_attendance(action='individual', tdy_date=tdy_date)
+                    continue
                 
                 elif ch1 == '3':
                     handle_attendance(action='visualise', tdy_date=tdy_date)
+                    continue
 
                 elif ch1 == '4': # back
                     break
@@ -339,11 +454,57 @@ def run_menu(print_options=True):
                     continue
 
         elif ch == '3':
-            print("Enter choice: ")
-            print("1. Add marks")
-            print("4. Go back")
-            ch1 = int(input("Enter choice: "))
+            res = marks_queries.prepare_table()
+            if not res:
+                print('Error! You do not have a Students list yet, or your current students list has been mutilated. Please create a new students list to proceed!')
+                continue
 
+            while True:
+                print("1. Modify Mark List")
+                print('2. View/Export Mark List')
+                print("3. Go back")
+                ch1 = input("Enter choice: ")
+                if ch1 not in '123':
+                    print('Invalid input!')
+                    continue
+
+                elif ch1 == '3':
+                    break
+
+                elif ch1 == '1':
+                    while True:
+                        print('1. Add/Modify marks')
+                        print('2. Delete Marks List')
+                        print('3. Go back')
+                        ch_add_del = input('Enter Choice: ')
+                        if ch_add_del not in '123':
+                            print('Invalid choice!')
+                            continue
+
+                        elif ch_add_del == '3':
+                            break
+
+                        elif ch_add_del == '1':
+                            while True:
+                                ch_all_single = input('(1) for all students\n(2) for individual student\n(3) Go Back: ').lower().strip()
+                                if ch_all_single not in '123':
+                                    continue
+                                if ch_all_single == '3':
+                                    break
+                                handle_marks(['add', ch_all_single])
+                                continue
+                        
+                                
+                        elif ch_add_del == '2':
+                            print("WARNING!! This will PERMANENTLY delete the entire Marks List. This action can't be undone.")
+                            proceed_yn = input('Proceed? y/N ')
+                            if proceed_yn == 'y':
+                                handle_marks(['delete', None])
+                                continue
+                
+                elif ch1 == '2':
+                    handle_marks(['visualise', None])
+                    continue
 
         elif ch == '4':
             system('cls')

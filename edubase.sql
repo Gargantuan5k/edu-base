@@ -19,6 +19,7 @@ SET time_zone = "+00:00";
 
 --
 CREATE DATABASE edubase;
+USE edubase;
 --
 
 -- --------------------------------------------------------
@@ -30,7 +31,7 @@ CREATE DATABASE edubase;
 DROP TABLE IF EXISTS `students_src`;
 CREATE TABLE IF NOT EXISTS `students_src`(
   `roll_no` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(10) NOT NULL,
+  `name` varchar(100) NOT NULL,
   PRIMARY KEY(`roll_no`)
 );
 
@@ -57,14 +58,14 @@ DROP TABLE IF EXISTS `marks`;
 CREATE TABLE IF NOT EXISTS `marks` (
   `roll_no` int NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
-  `UT-1` int NOT NULL,
-  `UT-2` int NOT NULL,
-  `Internals-1` int NOT NULL,
-  `Mid-Term` int NOT NULL,
-  `UT-3` int NOT NULL,
-  `UT-4` int NOT NULL,
-  `Internals-1` int NOT NULL,
-  `Annuals` int NOT NULL,
+  `UT-1` int,
+  `UT-2` int,
+  `Internals-1` int,
+  `Mid-Term` int,
+  `UT-3` int,
+  `UT-4` int,
+  `Internals-2` int,
+  `Annuals` int,
   PRIMARY KEY (`roll_no`)
 );
 
