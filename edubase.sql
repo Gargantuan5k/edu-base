@@ -1,16 +1,6 @@
--- phpMyAdmin SQL Dump
--- version 5.2.0
--- https://www.phpmyadmin.net/
---
--- Host: 127.0.0.1:3306
--- Generation Time: May 18, 2023 at 02:53 PM
--- Server version: 8.0.31
--- PHP Version: 8.0.26
-
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
-
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -26,7 +16,6 @@ CREATE DATABASE edubase;
 --
 -- Table structure for table `students_src`
 --
-
 DROP TABLE IF EXISTS `students_src`;
 CREATE TABLE IF NOT EXISTS `students_src`(
   `roll_no` int NOT NULL AUTO_INCREMENT,
@@ -39,7 +28,6 @@ CREATE TABLE IF NOT EXISTS `students_src`(
 --
 -- Table structure for table `attendance`
 --
-
 DROP TABLE IF EXISTS `attendance`;
 CREATE TABLE IF NOT EXISTS `attendance` (
   `roll_no` int NOT NULL AUTO_INCREMENT,
@@ -52,7 +40,6 @@ CREATE TABLE IF NOT EXISTS `attendance` (
 --
 -- Table structure for table `marks`
 --
-
 DROP TABLE IF EXISTS `marks`;
 CREATE TABLE IF NOT EXISTS `marks` (
   `roll_no` int NOT NULL AUTO_INCREMENT,
@@ -71,7 +58,7 @@ CREATE TABLE IF NOT EXISTS `marks` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `submission`
+-- Remove table 'submission', if exists
 --
 
 DROP TABLE IF EXISTS `submission`;
