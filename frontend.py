@@ -51,11 +51,11 @@ def validate_date(date_string):
 # Print menu function
 def print_menu():
     print("What would you like to do today?")
-    print("1. Interact with my Students List")
-    print("2. Update Today's Attendance")
-    print("3. Update Marks")
-    print("4. Clear the Screen")
-    print("5. Exit")
+    print("(1) Interact with my Students List")
+    print("(2) Update Today's Attendance")
+    print("(3) Update Marks")
+    print("(4) Clear the Screen")
+    print("(5) Exit")
 
 
 def handle_students_list(action='create'):
@@ -92,7 +92,7 @@ def handle_students_list(action='create'):
 
     elif action == 'modify': # modify existing list
         while True:
-            ch = input('Press 1 to delete individual students, 2 to add individual students, 3 to change names, 4 to go back: ')
+            ch = input('Press\n(1) To delete individual students\n(2) To add individual students\n(3) Change names\n(4) Go back\n(5) Clear Screen: ')
             if ch == '1': # delete stu
                 while True:
                     try:
@@ -175,6 +175,9 @@ def handle_students_list(action='create'):
 
             elif ch == '4':
                 return
+            elif ch == '5':
+                system('cls')
+                continue
             else:
                 print('Invalid data entered!')
                 continue
@@ -191,7 +194,8 @@ def handle_students_list(action='create'):
             print("""View options for STUDENT LIST
 (1) View as Terminal output
 (2) Export list to CSV
-(3) Go Back""")
+(3) Go Back
+(4) Clear Screen""")
             ch_view = input('Enter option: ')
             if ch_view == '1':
                 out = src_queries.view(mode='terminal')
@@ -208,7 +212,10 @@ def handle_students_list(action='create'):
                 continue
             elif ch_view == '3':
                 break
-            elif ch_view not in '123':
+            elif ch_view == '4':
+                system('cls')
+                continue
+            elif ch_view not in '1234':
                 print('Invalid option!')
                 continue
         return
@@ -294,7 +301,8 @@ def handle_attendance(tdy_date=tdy_date, action='roll'):
             print("""View options for ATTENDANCE
 (1) View as Terminal output
 (2) Export attendance to CSV
-(3) Go Back""")
+(3) Go Back
+(4) Clear Screen""")
             
             ch_view = input('Enter option: ')
             if ch_view == '1':
@@ -312,7 +320,10 @@ def handle_attendance(tdy_date=tdy_date, action='roll'):
                 continue
             elif ch_view == '3':
                 break
-            elif ch_view not in '123':
+            elif ch_view == '4':
+                system('cls')
+                continue
+            elif ch_view not in '1234':
                 print('Invalid option!')
                 continue
         return
@@ -404,7 +415,8 @@ def handle_marks(options):
             print("""View options for MARKS
 (1) View as Terminal output
 (2) Export mark list to CSV
-(3) Go Back""")
+(3) Go Back
+(4) Clear Screen""")
             
             ch_view = input('Enter option: ')
             if ch_view == '1':
@@ -422,7 +434,9 @@ def handle_marks(options):
                 continue
             elif ch_view == '3':
                 break
-            elif ch_view not in '123':
+            elif ch_view == '4':
+                system('cls')
+            elif ch_view not in '1234':
                 print('Invalid option!')
                 continue
         return
@@ -441,11 +455,12 @@ def run_menu(print_options=True):
         if ch == '1':
             while True:
                 print("-----------------")
-                print("1. Create a new Students list")
-                print("2. Update/modify my current Students List")
-                print("3. View my Students List as text or a file")
-                print("4. Delete my Students List")
-                print("5. Go Back")
+                print("(1) Create a new Students list")
+                print("(2) Update/modify my current Students List")
+                print("(3) View my Students List as text or a file")
+                print("(4) Delete my Students List")
+                print("(5) Go Back")
+                print("(6) Clear Screen")
 
                 ch1 = input("Choose an action: ")
 
@@ -486,6 +501,11 @@ def run_menu(print_options=True):
 
                 elif ch1 == '5': # Back
                     break
+                
+                elif ch1 == '6':
+                    system('cls')
+                    continue
+
                 else:
                     print('Invalid data entered!')
                     continue
@@ -511,10 +531,11 @@ def run_menu(print_options=True):
             print("Enter choice: ")
             
             while True:
-                print("1. Take Roll Call")
-                print("2. Mark attendance of specific student(s)")
-                print("3. Get attendance report")
-                print("4. Go back")
+                print("(1) Take Roll Call")
+                print("(2) Mark attendance of specific student(s)")
+                print("(3) Get attendance report")
+                print("(4) Go back")
+                print("(5) Clear Screen")
 
                 ch1 = input("Enter choice: ")
 
@@ -532,6 +553,11 @@ def run_menu(print_options=True):
 
                 elif ch1 == '4': # back
                     break
+
+                elif ch1 == '5':
+                    system('cls')
+                    continue
+
                 else:
                     print('Invalid data entered!')
                     continue
@@ -543,12 +569,17 @@ def run_menu(print_options=True):
                 continue
 
             while True:
-                print("1. Modify Mark List")
-                print('2. View/Export Mark List')
-                print("3. Go back")
+                print("(1) Modify Mark List")
+                print('(2) View/Export Mark List')
+                print("(3) Go back")
+                print("(4) Clear Screen")
                 ch1 = input("Enter choice: ")
-                if ch1 not in '123':
+                if ch1 not in '1234':
                     print('Invalid input!')
+                    continue
+
+                elif ch1 == '4':
+                    system('cls')
                     continue
 
                 elif ch1 == '3':
@@ -556,12 +587,17 @@ def run_menu(print_options=True):
 
                 elif ch1 == '1':
                     while True:
-                        print('1. Add/Modify marks')
-                        print('2. Delete Marks List')
-                        print('3. Go back')
+                        print('(1) Add/Modify marks')
+                        print('(2) Delete Marks List')
+                        print('(3) Go back')
+                        print("(4) Clear Screen")
                         ch_add_del = input('Enter Choice: ')
-                        if ch_add_del not in '123':
+                        if ch_add_del not in '1234':
                             print('Invalid choice!')
+                            continue
+                        
+                        elif ch_add_del == '4':
+                            system('cls')
                             continue
 
                         elif ch_add_del == '3':
@@ -569,11 +605,14 @@ def run_menu(print_options=True):
 
                         elif ch_add_del == '1':
                             while True:
-                                ch_all_single = input('(1) for all students\n(2) for individual student\n(3) Go Back: ').lower().strip()
-                                if ch_all_single not in '123':
+                                ch_all_single = input('(1) for all students\n(2) for individual student\n(3) Go Back:\n(4) Clear Screen: ').lower().strip()
+                                if ch_all_single not in '1234':
                                     continue
                                 if ch_all_single == '3':
                                     break
+                                if ch_all_single == '4':
+                                    system('cls')
+                                    continue
                                 handle_marks(['add', ch_all_single])
                                 continue
                         
