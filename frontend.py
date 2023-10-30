@@ -11,6 +11,43 @@ tdy_date = str(date.today())
 
 test = ""
 
+
+def validate_name(name):
+    return name.isalpha()
+
+
+def validate_date(date_string):
+    try:
+        date = datetime.strptime(date_string, '%Y-%m-%d')
+        today = datetime.today()
+
+        # Check if the date is not in the future
+        if date > today:
+            return False
+
+        # Check if the year, month, and day are valid
+        year, month, day = date.year, date.month, date.day
+        if year < 1 or month < 1 or month > 12 or day < 1:
+            return False
+
+        # Check if the day is valid for the given month
+        max_day = 31  # Default to maximum days in a month
+        if month in {4, 6, 9, 11}:
+            max_day = 30
+        elif month == 2:
+            if year % 400 == 0 or (year % 4 == 0 and year % 100 != 0):
+                max_day = 29  # Leap year
+            else:
+                max_day = 28
+
+        if day > max_day:
+            return False
+
+        return True
+
+    except ValueError:
+        return False
+
 # Print menu function
 def print_menu():
     print("What would you like to do today?")
@@ -22,14 +59,26 @@ def print_menu():
 
 
 def handle_students_list(action='create'):
-    if action == 'create':
+    if action == 'create': # create a new list
         students = {}
         while True:
             try:
                 num_stu = int(input("Enter the number of students in your classroom: "))
 
                 for i in range(num_stu):
-                    students[i+1] = input(f"Enter NAME of student, ROLL NUMBER {i+1}: ")
+                    while True:
+                        name_stu = input(f"Enter NAME of student, ROLL NUMBER {i+1}: ")
+                        valid = validate_name(name_stu)
+                        if not valid:
+                            print(f"Looks like the name {name_stu} contains non-alphabet characters! Proceed(y) or change(n)? ")
+                            proceed_change_yn = input().lowe().strip()
+                            if proceed_change_yn == 'y':
+                                break
+                            else:
+                                continue
+                        else:
+                            break
+                    students[i+1] = name_stu
 
                 src_queries.create_list(stu_dict=students)
             except:
@@ -41,7 +90,7 @@ def handle_students_list(action='create'):
         print('List Successfully Created! You can modify your class list at any time through the same menu.')
         return
 
-    elif action == 'modify':
+    elif action == 'modify': # modify existing list
         while True:
             ch = input('Press 1 to delete individual students, 2 to add individual students, 3 to change names, 4 to go back: ')
             if ch == '1': # delete stu
@@ -66,7 +115,20 @@ def handle_students_list(action='create'):
                         roll = int(input("Enter new roll number, 0 to stop.: "))
                         if roll == 0:
                             break
-                        name = input("Enter new name: ")
+                        
+                        # Validation of name
+                        while True:
+                            name = input("Enter new name: ")
+                            valid = validate_name(name)
+                            if not valid:
+                                print(f"Looks like the name {name} contains non-alphabet characters! Proceed(y) or change(n)?")
+                                proceed_change_yn = input().lower().strip()
+                                if proceed_change_yn == 'y':
+                                    break
+                                else:
+                                    continue
+                            else:
+                                break                     
                         
                         if src_queries.check_student_rec_exists(roll):
                             yn = input("WARNING: A student with this roll number already exists. Overwrite? (y/N): ").lower().strip()
@@ -89,8 +151,22 @@ def handle_students_list(action='create'):
                         roll = int(input('Enter roll number to change name, enter 0 to stop.: '))
                         if roll == 0:
                             break
-                        new_name = input(f"Enter new name for roll no. {roll}: ")
                         
+                        # Validation of name
+                        while True:
+                            new_name = input(f"Enter new name for roll no. {roll}: ")
+                            valid = validate_name(new_name)
+                            if not valid:
+                                print(f"Looks like the name {new_name} contains non-alphabet characters! Proceed(y) or change(n)?")
+                                proceed_change_yn = input().lower().strip()
+                                if proceed_change_yn == 'y':
+                                    break
+                                else:
+                                    continue 
+                            else:
+                                break
+
+
                         res = src_queries.update_student(roll_no=roll, new_name=new_name)
                         print(f"Changed student details: {res['original']} -> {res['new']}")
                     except (ValueError, TypeError):
@@ -110,13 +186,12 @@ def handle_students_list(action='create'):
         return
     
     
-    elif action == 'visualise': 
-        print("""View options for STUDENT LIST
+    elif action == 'visualise':         
+        while True:
+            print("""View options for STUDENT LIST
 (1) View as Terminal output
 (2) Export list to CSV
 (3) Go Back""")
-        
-        while True:
             ch_view = input('Enter option: ')
             if ch_view == '1':
                 out = src_queries.view(mode='terminal')
@@ -214,13 +289,13 @@ def handle_attendance(tdy_date=tdy_date, action='roll'):
             
             attendance_queries.mark_attendance(tdy_date=tdy_date, present=present, absent=absent)
 
-    elif action == 'visualise': 
-        print("""View options for ATTENDANCE
+    elif action == 'visualise':         
+        while True:
+            print("""View options for ATTENDANCE
 (1) View as Terminal output
 (2) Export attendance to CSV
 (3) Go Back""")
-        
-        while True:
+            
             ch_view = input('Enter option: ')
             if ch_view == '1':
                 out = attendance_queries.view(mode='terminal')
@@ -324,13 +399,13 @@ def handle_marks(options):
         marks_queries.wipe()
         print('Deleted Successfully!')
 
-    elif options[0] == 'visualise':
-        print("""View options for MARKS
+    elif options[0] == 'visualise':       
+        while True:
+            print("""View options for MARKS
 (1) View as Terminal output
 (2) Export mark list to CSV
 (3) Go Back""")
-        
-        while True:
+            
             ch_view = input('Enter option: ')
             if ch_view == '1':
                 out = marks_queries.view(mode='terminal')
@@ -364,14 +439,14 @@ def run_menu(print_options=True):
             ch = 'err'
         # Program:
         if ch == '1':
-            print("-----------------")
-            print("1. Create a new Students list")
-            print("2. Update/modify my current Students List")
-            print("3. View my Students List as text or a file")
-            print("4. Delete my Students List")
-            print("5. Go Back")
-
             while True:
+                print("-----------------")
+                print("1. Create a new Students list")
+                print("2. Update/modify my current Students List")
+                print("3. View my Students List as text or a file")
+                print("4. Delete my Students List")
+                print("5. Go Back")
+
                 ch1 = input("Choose an action: ")
 
                 if ch1 == '1': # Create new list
@@ -417,8 +492,16 @@ def run_menu(print_options=True):
 
         if ch == '2':
             print(f'By default, this will edit the attendance for TODAY {str(date.today())}. If you would like to update attendance for another date, enter it below, or leave it blank to use the default.')
-            user_date = input('Enter Date (FORMAT: YYYY-MM-DD): ').strip()
-            ymd = user_date.split('-')
+            while True:
+                user_date = input('Enter Date (FORMAT: YYYY-MM-DD): ').strip()
+                if not user_date: break
+                ymd = user_date.split('-')
+                valid = validate_date(user_date)
+                if not valid:
+                    print("Invalid date!")
+                    continue
+                else:
+                    break
             try:
                 ud = datetime(ymd[0], ymd[1], ymd[2])
                 tdy_date = ud
