@@ -16,7 +16,7 @@ def test_login(uname, pwd):
             user=uname,
             password=pwd,
             database="edubase",
-            port=3307  # TODO KEEP THIS COMMENTED unless reqd
+            # port=3307  # TODO KEEP THIS COMMENTED unless reqd
         )
     except Exception:
         return False
