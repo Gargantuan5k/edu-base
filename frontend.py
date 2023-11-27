@@ -1,3 +1,32 @@
+import mysql.connector
+try:
+    db = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="admin",
+            database="edubase",
+            # port=3307  # TODO KEEP THIS COMMENTED unless reqd
+        )
+except Exception:
+    try:
+        db = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="root",
+            database="edubase",
+            # port=3307  # TODO KEEP THIS COMMENTED unless reqd
+        )
+    except Exception:
+        print('Hey there user! Looks like your database schema has not been set up yet. Here\'s how you can fix this:')
+        print('First, locate the \'edubase.sql\' file. It should be in the same folder as this Python file. Copy its path.')
+        print('Open MySQL Command Line Client')
+        print('Type the following query:\n')
+        print('source <paste the path to the edubase.sql file that you copied>')
+        print('\nIf you get no errors, re-run this file to start eduBase!')
+        print('Detailed instructions with screenshots: https://github.com/Gargantuan5k/edu-base')
+        exit()
+
+
 import src_queries
 import attendance_queries
 import marks_queries
@@ -6,7 +35,6 @@ from tkinter.filedialog import askdirectory as choose_folder
 from datetime import date, datetime
 from os import system
 from os import remove
-import mysql.connector
 
 
 def test_login(uname, pwd):
