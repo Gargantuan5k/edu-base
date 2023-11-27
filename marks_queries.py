@@ -8,7 +8,7 @@ db = mysql.connector.connect(
     user="root",
     password="root",
     database="edubase",
-    # port=3307  # TODO KEEP THIS COMMENTED unless reqd
+    port=3307  # TODO KEEP THIS COMMENTED unless reqd
     )
 
 def get_cursor(dictionary=False):
@@ -19,7 +19,12 @@ def get_cursor(dictionary=False):
 
 def populate():
     cursor = get_cursor()
-    q = f"insert into marks(roll_no, name) select roll_no, name from students_src where roll_no not in (select roll_no from marks)"
+    cursor.execute('select * from marks')
+    r = cursor.fetchall()
+    if not r:
+        q = f"insert into marks(roll_no, name) select roll_no, name from students_src"
+    else:
+        q = f"insert into marks(roll_no, name) select roll_no, name from students_src where roll_no not in (select roll_no from marks)"
     cursor.execute(q)
     db.commit()
     cursor.close()

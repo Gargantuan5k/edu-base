@@ -20,8 +20,12 @@ def print_endcard():
         print(ecf.read())
 
 
-def print_help():
+def cls():
     system('cls')
+
+
+def print_help():
+    cls()
     with open('ascii/what_is_this.txt', 'r') as hf:
         print(hf.read())
 
@@ -37,7 +41,6 @@ def print_menu():
     print("(6) Exit")
 
 
-
 try:
     # Get today's date
     tdy_date = str(date.today())
@@ -46,7 +49,7 @@ try:
 
 
     def validate_name(name):
-        return name.isalpha()
+        return all([i.isalpha() for i in name.split()])
 
 
     def validate_date(date_string):
@@ -90,7 +93,7 @@ try:
 
                     for i in range(num_stu):
                         while True:
-                            name_stu = input(f"Enter NAME of student, ROLL NUMBER {i+1}: ")
+                            name_stu = input(f"Enter NAME of student, ROLL NUMBER {i+1}: ").strip()
                             valid = validate_name(name_stu)
                             if not valid:
                                 print(f"Looks like the name {name_stu} contains non-alphabet characters! Proceed(y) or change(n)? ")
@@ -105,7 +108,7 @@ try:
 
                     src_queries.create_list(stu_dict=students)
                 except Exception:
-                    print('Invalid data entered! Try again.')
+                    print('Invalid Data!')
                     continue
                 break
 
@@ -141,7 +144,7 @@ try:
                             
                             # Validation of name
                             while True:
-                                name = input("Enter new name: ")
+                                name = input("Enter new name: ").strip()
                                 valid = validate_name(name)
                                 if not valid:
                                     print(f"Looks like the name {name} contains non-alphabet characters! Proceed(y) or change(n)?")
@@ -176,7 +179,7 @@ try:
                             
                             # Validation of name
                             while True:
-                                new_name = input(f"Enter new name for roll no. {roll}: ")
+                                new_name = input(f"Enter new name for roll no. {roll}: ").strip()
                                 valid = validate_name(new_name)
                                 if not valid:
                                     print(f"Looks like the name {new_name} contains non-alphabet characters! Proceed(y) or change(n)?")
@@ -198,7 +201,7 @@ try:
                 elif ch == '4':
                     return
                 elif ch == '5':
-                    system('cls')
+                    cls()
                     continue
                 else:
                     print('Invalid data entered!')
@@ -235,7 +238,7 @@ try:
                 elif ch_view == '3':
                     break
                 elif ch_view == '4':
-                    system('cls')
+                    cls()
                     continue
                 elif ch_view not in '1234':
                     print('Invalid option!')
@@ -343,7 +346,7 @@ try:
                 elif ch_view == '3':
                     break
                 elif ch_view == '4':
-                    system('cls')
+                    cls()
                     continue
                 elif ch_view not in '1234':
                     print('Invalid option!')
@@ -461,7 +464,7 @@ try:
                 elif ch_view == '3':
                     break
                 elif ch_view == '4':
-                    system('cls')
+                    cls()
                 elif ch_view not in '1234':
                     print('Invalid option!')
                     continue
@@ -529,7 +532,7 @@ try:
                         break
                     
                     elif ch1 == '6':
-                        system('cls')
+                        cls()
                         continue
 
                     else:
@@ -581,7 +584,7 @@ try:
                         break
 
                     elif ch1 == '5':
-                        system('cls')
+                        cls()
                         continue
 
                     else:
@@ -605,7 +608,7 @@ try:
                         continue
 
                     elif ch1 == '4':
-                        system('cls')
+                        cls()
                         continue
 
                     elif ch1 == '3':
@@ -623,7 +626,7 @@ try:
                                 continue
                             
                             elif ch_add_del == '4':
-                                system('cls')
+                                cls()
                                 continue
 
                             elif ch_add_del == '3':
@@ -637,7 +640,7 @@ try:
                                     if ch_all_single == '3':
                                         break
                                     if ch_all_single == '4':
-                                        system('cls')
+                                        cls()
                                         continue
                                     handle_marks(['add', ch_all_single])
                                     continue
@@ -655,12 +658,12 @@ try:
                         continue
 
             elif ch == '4':
-                system('cls')
+                cls()
 
             elif ch == '5':
                 print_help()
                 input()
-                system('cls')
+                cls()
                 print_titlecard()
                 continue
 
