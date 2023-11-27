@@ -315,7 +315,7 @@ try:
                 
                 if overwrite_yn == 'y':
                     for stu in res[2]:
-                        att = input(f'Attendance for Roll {stu[0]} {stu[1]} (p/a), any other key to quit: ').lower().strip()
+                        att = input(f'[{tdy_date}] Attendance for Roll {stu[0]} {stu[1]} (p/a), any other key to quit: ').lower().strip()
                         if att == 'p':
                             present.append(stu[0])
                         elif att == 'a':
@@ -325,7 +325,7 @@ try:
                             break
                 else:
                     for stu in res[3]:
-                        att = input(f'Attendance for Roll {stu[0]} {stu[1]} (p/a): ').lower().strip()
+                        att = input(f'[{tdy_date}] Attendance for Roll {stu[0]} {stu[1]} (p/a): ').lower().strip()
                         if att == 'p':
                             present.append(stu[0])
                         else:
@@ -358,7 +358,7 @@ try:
                         continue
             
                 while True:
-                    att = input(f"Enter attendance for Roll {rno} (p/a): ").lower().strip()
+                    att = input(f"[{tdy_date}] Enter attendance for Roll {rno} (p/a): ").lower().strip()
                     if att == 'p':
                         present.append(rno)
                     elif att == 'a':
