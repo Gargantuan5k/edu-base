@@ -3,10 +3,18 @@ from os import getcwd, path as ospath
 import csv
 import marks_queries, attendance_queries
 
+try:
+    with open('login.txt', 'r') as f:
+        s = f.read()
+        uname, pwd = tuple(s.split())
+except Exception:
+    uname = 'root'
+    pwd = 'root'
+
 db = mysql.connector.connect(
     host="localhost",
-    user="root",
-    password="root",
+    user=uname,
+    password=pwd,
     database="edubase",
     port=3307  # TODO KEEP THIS COMMENTED unless reqd
     )

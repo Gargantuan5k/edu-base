@@ -5,23 +5,40 @@ from tkinter import Tk
 from tkinter.filedialog import askdirectory as choose_folder
 from datetime import date, datetime
 from os import system
-
-# Welcome to eduBase!
-def print_titlecard():
-        with open('ascii/titlecard.txt', 'r') as tcf:
-            print(tcf.read())
+from os import remove
+import mysql.connector
 
 
-print_titlecard()
-
-# Thanks!
-def print_endcard():
-    with open('ascii/endcard.txt', 'r') as ecf:
-        print(ecf.read())
+def test_login(uname, pwd):
+    try:
+        db = mysql.connector.connect(
+            host="localhost",
+            user=uname,
+            password=pwd,
+            database="edubase",
+            port=3307  # TODO KEEP THIS COMMENTED unless reqd
+        )
+    except Exception:
+        return False
+    return True
 
 
 def cls():
     system('cls')
+
+
+# Welcome to eduBase!
+def print_titlecard():
+        cls()
+        with open('ascii/titlecard.txt', 'r') as tcf:
+            print(tcf.read())
+
+
+# Thanks!
+def print_endcard():
+    cls()
+    with open('ascii/endcard.txt', 'r') as ecf:
+        print(ecf.read())
 
 
 def print_help():
@@ -32,6 +49,10 @@ def print_help():
 
 # Print menu function
 def print_menu():
+    cls()
+    with open('ascii/mainmenu.txt', 'r') as f:
+        print(f.read())
+    
     print("What would you like to do today?")
     print("(1) Manage my Students List")
     print("(2) Manage my class' Attendance data")
@@ -483,7 +504,7 @@ try:
             # Program:
             if ch == '1':
                 while True:
-                    print("-----------------")
+                    print("STUDENTS LIST MENU")
                     print("(1) Create a new Students list")
                     print("(2) Update/modify my current Students List")
                     print("(3) View my Students List as text or a file")
@@ -676,9 +697,28 @@ try:
                 print_options = False # do not reprint the menu; user has entered invalid data.
                 continue
 
+
+    def run_welcome():
+        print_titlecard()
+        print(f"[DATABASE LOGIN]")
+        while True:
+            sql_uname = input('Please enter your MySQL Username: ')
+            sql_pwd = input('Please enter your MySQL Password: ')
+            res = test_login(sql_uname, sql_pwd)
+            if not res:
+                print('Invalid MySQL Login details!')
+                continue
+            break
+        return sql_uname, sql_pwd
+
     if __name__ == '__main__':
+        sql_uname, sql_pwd = run_welcome()
+        with open('login.txt', 'w') as f:
+            f.write(f"{sql_uname} {sql_pwd}")
+        cls()
         run_menu()
         src_queries.close_db()
+        remove('login.txt')
 
 except KeyboardInterrupt:
     print_endcard()
