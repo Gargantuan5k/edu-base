@@ -7,7 +7,7 @@ db = mysql.connector.connect(
     user="root",
     password="root",
     database="edubase",
-    # port=3307  # TODO KEEP THIS COMMENTED unless reqd
+    port=3307  # TODO KEEP THIS COMMENTED unless reqd
     )
 
 def close_db():

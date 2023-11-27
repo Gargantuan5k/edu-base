@@ -104,7 +104,7 @@ try:
                         students[i+1] = name_stu
 
                     src_queries.create_list(stu_dict=students)
-                except:
+                except Exception:
                     print('Invalid data entered! Try again.')
                     continue
                 break
@@ -166,7 +166,6 @@ try:
                         except (ValueError, TypeError):
                             print('Invalid data entered!')
                             continue
-
 
                 elif ch == '3': # change names
                     while True:
@@ -371,7 +370,11 @@ try:
                 print(f"({idx+1}) {e}")
 
             while True:
-                ch_exam = int(input('Choose exam: '))
+                try:
+                    ch_exam = int(input('Choose exam: '))
+                except Exception:
+                    print('Invalid input!')
+                    continue
                 if ch_exam not in range(1, len(exams) + 1):
                     print('Invalid option!')
                     continue
@@ -393,7 +396,7 @@ try:
                                 mark = int(mark)
                                 mark_l.append({'roll_no': rno, f'{exam}': mark})
                                 break
-                            except:
+                            except Exception:
                                 print('Invalid datatype!')
                                 continue
                         else:
@@ -422,7 +425,7 @@ try:
                         mark = int(mark)
                         mark_l.append({'roll_no': rno, f'{exam}': mark})
                         break
-                    except:
+                    except Exception:
                         print('Invalid datatype!')
                         continue
                             
@@ -548,7 +551,7 @@ try:
                 try:
                     ud = datetime(ymd[0], ymd[1], ymd[2])
                     tdy_date = ud
-                except:
+                except Exception:
                     tdy_date = str(date.today())
 
                 print("Enter choice: ")
@@ -628,7 +631,7 @@ try:
 
                             elif ch_add_del == '1':
                                 while True:
-                                    ch_all_single = input('(1) for all students\n(2) for individual student\n(3) Go Back:\n(4) Clear Screen: ').lower().strip()
+                                    ch_all_single = input('(1) For all students\n(2) For individual student\n(3) Go Back:\n(4) Clear Screen: ').lower().strip()
                                     if ch_all_single not in '1234':
                                         continue
                                     if ch_all_single == '3':
