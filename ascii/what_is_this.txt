@@ -1,0 +1,56 @@
+
+
+ .----------------. 
+| .--------------. |    
+| |    ______    | |                                    
+| |   / _ __ `.  | |   
+| |  |_/____) |  | |   
+| |    /  ___.'  | |
+| |    |_|       | |
+| |    (_)       | |
+| |              | |
+| '--------------' | 
+ '----------------' 
+                                                                                                            
+Hello user!
+Welcome to eduBase - the one-stop tool that makes classroom data management faster and easier.
+Ever had to maintain a classroom register on paper and felt frustrated? Ever found keeping track of class attendance in books cumbersome?
+Ever searched for an instant way to record classroom data and export it?
+Well search no more! eduBase: The Classroom Management App provides these features to you, in an easy to use and intuitive menu-based UI.
+
+eduBase is written completely in Python 3 and uses MySQL5 as a database system. We have used stable and reliable platforms and modules to provide you the best experience possible!
+
+x---------------------x
+ HOW DO I USE eduBase?
+x---------------------x
+
+1. STUDENTS LIST
+First, create a students list, following the menu instructions. This is a list of all the students in your classroom and their roll numbers.
+(Use the main menu option titled 'Manage my Students List')
+You can edit or delete the list at any time, but you can have only one list active at a time.
+All other features provided by eduBase use the names and roll numbers in this Students List.
+You can also export your class list to a .csv file for your convenience!
+
+
+2. ATTENDANCE
+Follow menu instructions to manage attendance data for your class. This is under the main menu option labelled 'Manage my class' Attendance data'.
+Enter the date to manage attendance for, or leave it blank to use today's date automatically.
+Further menu instructions will allow you to take roll call, mark attendancec for individual students
+and also export an attendance report to CSV!
+
+
+3. MARKS
+The 'Manage my class' Marks data' option allows you to modify the marks of all your students, or an individual student.
+You can also wipe your marks data and start over.
+Additionally, you can export the Marks list as a CSV file for easy access!
+
+
+You can view the source code for this project at https://github.com/Gargantuan5k/edu-base. Installation instructions are also available.
+
+Hope you find this helpful, and thanks for choosing eduBase! :)
+
+- Siddharth, Kanishk and Nandan
+  The eduBase Team
+
+Press ENTER to exit help (This will also clear the screen)
+

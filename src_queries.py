@@ -1,11 +1,20 @@
 import mysql.connector
 from os import getcwd, path as ospath
 import csv
+import marks_queries, attendance_queries
+
+try:
+    with open('login.txt', 'r') as f:
+        s = f.read()
+        uname, pwd = tuple(s.split())
+except Exception:
+    uname = 'root'
+    pwd = 'root'
 
 db = mysql.connector.connect(
     host="localhost",
-    user="root",
-    password="root",
+    user=uname,
+    password=pwd,
     database="edubase",
     # port=3307  # TODO KEEP THIS COMMENTED unless reqd
     )
@@ -43,6 +52,8 @@ def create_list(**kwargs):
     
     if check_src_exists():
         cursor.execute('delete from students_src')
+        cursor.execute('delete from marks')
+        cursor.execute('delete from attendance')
 
     students = kwargs['stu_dict']
 
@@ -52,11 +63,16 @@ def create_list(**kwargs):
     
     db.commit()
     cursor.close()
+    marks_queries.populate()
+    attendance_queries.populate()
+
 
 
 def delete_list():
     cursor = get_cursor()
     cursor.execute("delete from students_src")
+    cursor.execute('delete from marks')
+    cursor.execute('delete from attendance')
     db.commit()
     cursor.close()
 
@@ -67,8 +83,12 @@ def add_student(roll_no, name, exists=False):
     if exists:
         cursor.execute(f"delete from students_src where roll_no = '{roll_no}'")
     
-    add_query = f"insert into students_src(roll_no, name) values('{roll_no}', '{name}')"
-    cursor.execute(add_query)
+    src_add_query = f"insert into students_src(roll_no, name) values('{roll_no}', '{name}')"
+    att_add_query = f"insert into attendance(roll_no, name) values('{roll_no}', '{name}')"
+    marks_add_query = f"insert into marks(roll_no, name) values('{roll_no}', '{name}')"
+    cursor.execute(src_add_query)
+    cursor.execute(att_add_query)
+    cursor.execute(marks_add_query)
 
     db.commit()
     cursor.close()
@@ -87,8 +107,12 @@ def delete_student(roll_no):
     get_query = f"select * from students_src where roll_no = '{roll_no}'"
     cursor.execute(get_query)
     res = cursor.fetchall()
-    del_query = f"delete from students_src where roll_no = '{roll_no}'"    
-    cursor.execute(del_query)
+    src_del_query = f"delete from students_src where roll_no = '{roll_no}'"
+    att_del_query = f"delete from attendance where roll_no = '{roll_no}'"
+    marks_del_query = f"delete from marks where roll_no = '{roll_no}'"    
+    cursor.execute(src_del_query)
+    cursor.execute(att_del_query)
+    cursor.execute(marks_del_query)
 
     db.commit()
     cursor.close()
@@ -104,8 +128,12 @@ def update_student(roll_no, new_name):
     orig = cursor.fetchall()
     res['original'] = orig
 
-    update_query = f"update students_src set name = '{new_name}' where roll_no = '{roll_no}'"
-    cursor.execute(update_query)
+    src_update_query = f"update students_src set name = '{new_name}' where roll_no = '{roll_no}'"
+    marks_update_query = f"update marks set name = '{new_name}' where roll_no = '{roll_no}'"
+    att_update_query = f"update attendance set name = '{new_name}' where roll_no = '{roll_no}'"
+    cursor.execute(src_update_query)
+    cursor.execute(att_update_query)
+    cursor.execute(marks_update_query)
     res['new'] = (roll_no, new_name)
 
     db.commit()

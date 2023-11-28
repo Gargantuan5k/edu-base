@@ -3,10 +3,18 @@ import src_queries
 import csv
 from os import getcwd, path as ospath
 
+try:
+    with open('login.txt', 'r') as f:
+        s = f.read()
+        uname, pwd = tuple(s.split())
+except Exception:
+    uname = 'root'
+    pwd = 'root'
+
 db = mysql.connector.connect(
     host="localhost",
-    user="root",
-    password="root",
+    user=uname,
+    password=pwd,
     database="edubase",
     # port=3307  # TODO KEEP THIS COMMENTED unless reqd
     )
@@ -18,7 +26,12 @@ def get_cursor(dictionary=False):
 
 def populate():
     cursor = get_cursor()
-    q = f"insert into attendance(roll_no, name) select roll_no, name from students_src where roll_no not in (select roll_no from attendance)"
+    cursor.execute('select * from attendance')
+    r = cursor.fetchall()
+    if not r:
+        q = f"insert into attendance(roll_no, name) select roll_no, name from students_src"
+    else:
+        q = f"insert into attendance(roll_no, name) select roll_no, name from students_src where roll_no not in (select roll_no from attendance)"
     cursor.execute(q)
     db.commit()
     cursor.close()
